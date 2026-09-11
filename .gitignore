@@ -1,0 +1,10 @@
+# OS junk
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.DS_Store
+
+# editor / tooling
+.vscode/
+.idea/
+*.log
