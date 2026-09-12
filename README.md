@@ -30,21 +30,44 @@
     └── images/*.jpg      # 示例图
 ```
 
-## 部署说明
+## 部署与访问控制
 
-GitHub Pages，来源为 `main` 分支根目录（`/`）。
+站点通过 **Cloudflare Workers（静态资源）+ Cloudflare Access** 发布，**只有被邀请的邮箱登录后才能访问**。
 
-### ⚠️ `.nojekyll` 不能删
+完整步骤见 **[DEPLOY-CLOUDFLARE.md](./DEPLOY-CLOUDFLARE.md)**。
 
-本仓库有 **84 张示例图的文件名以 `_` 开头**（例如 `_041.jpg`）。GitHub Pages 默认会执行 Jekyll 构建，而 Jekyll 会**跳过**所有以 `_`、`.`、`#` 开头的文件——这些图会全部 404。根目录的 `.nojekyll` 用于关闭 Jekyll，一旦删掉图库就会缺图。
+> ⚠️ **不要启用 GitHub Pages。**
+> GitHub Pages 是纯静态托管，没有登录能力；一旦开启，
+> `https://kawanagi123456.github.io/self-use-prompt/` 会把全部 3026 张图重新公开出去，
+> Cloudflare Access 的保护就形同虚设。如果之前开过，请在仓库
+> Settings → Pages → Source 选 `None` 关掉。
+
+日常更新：
+
+```powershell
+cd self-use-prompt
+npx wrangler deploy
+```
+
+### `wrangler.jsonc` / `.assetsignore` 不能删
+
+- `wrangler.jsonc` —— 部署配置
+- `.assetsignore` —— 排除 `.git`（约 500 MB、3400+ 个对象文件）。没有它，wrangler 会把 git 对象也当成静态资源上传，既慢又会**把完整提交历史公开出去**
+
+已实测：加上 `.assetsignore` 后实际上传 **3,050 个文件 / 268 MB**，`.git` 下 0 个文件。
 
 ### 图片已压缩
 
-原始示例图共 1196 MB，已统一重新编码为**长边最大 1280px、JPEG 质量 82（mozjpeg / progressive）**，压缩后为 266 MB，仓库总计约 268 MB（3052 个文件）。
+原始示例图共 1196 MB，已统一重新编码为**长边最大 1280px、JPEG 质量 82（mozjpeg / progressive）**，压缩后约 266 MB。
 
 页面中图片的最大显示宽度约 1150px，因此 1280px 对图鉴展示和放大查看都足够。本地原始未压缩图片不包含在本仓库内。
 
 新增分类时只需压缩新图，已处理过的图片会直接复用，不会二次编码造成画质损失。
+
+### `.nojekyll` 现已无用但保留
+
+它原本是给 GitHub Pages 关掉 Jekyll 用的（本仓库有 84 张图以 `_` 开头）。
+改用 Cloudflare Workers 后不再需要，留着不影响。
 
 ## 更新内容
 
@@ -56,4 +79,4 @@ git commit -m "更新 tag 图鉴"
 git push
 ```
 
-推送后 GitHub Pages 通常 1 分钟内自动重新发布。
+推送只更新 GitHub 仓库，线上站点需要另外执行 `npx wrangler deploy` 才会更新。

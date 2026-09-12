@@ -1,0 +1,14 @@
+{
+  // Cloudflare Workers static-assets deployment.
+  // Free plan limits: 20,000 assets per version, 25 MiB per file.
+  // This project ships ~3,050 files, largest 714 KB.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "self-use-prompt",
+  "compatibility_date": "2026-09-13",
+
+  // The whole repo root is the site. .assetsignore keeps repo-only files
+  // (most importantly the 500 MB .git directory) out of the upload.
+  "assets": {
+    "directory": "./"
+  }
+}

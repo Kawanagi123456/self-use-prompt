@@ -8,3 +8,7 @@ desktop.ini
 .vscode/
 .idea/
 *.log
+
+# local wrangler / npm (created by `npx wrangler deploy`)
+node_modules/
+.wrangler/

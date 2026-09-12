@@ -1,0 +1,19 @@
+# Files that must NOT be uploaded as static assets.
+# Without this, wrangler would try to upload the entire .git directory
+# (hundreds of MB) and blow past the free-plan limit of 20,000 assets.
+
+.git
+# Hedge for Windows: readdir() returns backslash paths there, and a bundled
+# gitignore matcher may not split on "\", so ".git" alone might only match the
+# directory entry and not its contents. ".git*" matches the contents either way.
+.git*
+.gitignore
+.assetsignore
+node_modules
+wrangler.jsonc
+wrangler.toml
+package.json
+package-lock.json
+README.md
+DEPLOY-CLOUDFLARE.md
+_*.js
