@@ -9,6 +9,9 @@ desktop.ini
 .idea/
 *.log
 
-# local wrangler / npm (created by `npx wrangler deploy`)
+# download stubs that some categories still carry
+*.qkdownloading
+
+# local npm / tooling
 node_modules/
 .wrangler/
